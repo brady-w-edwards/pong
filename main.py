@@ -3,6 +3,7 @@ from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from left_player import PlayerLeft
 from right_player import PlayerRight
 from net import Net
+from ball import Ball
 
 def main():
     pygame.init()
@@ -13,10 +14,13 @@ def main():
     # CREATE GROUPS
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    ball = pygame.sprite.Group()
+    court = pygame.sprite.Group()
 
     PlayerLeft.containers = (updatable, drawable)
     PlayerRight.containers = (updatable,drawable)
     Net.containers = (updatable, drawable)
+    Ball.containers = (ball, updatable, drawable)
 
     player1 = PlayerLeft(SCREEN_WIDTH/16, SCREEN_HEIGHT/2)
     player2 = PlayerRight(SCREEN_WIDTH - SCREEN_WIDTH/16, SCREEN_HEIGHT - SCREEN_HEIGHT/2)
