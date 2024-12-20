@@ -1,51 +1,23 @@
 import pygame
-import random
-from ball import Ball
 from constants import *
+from rectangle import Rectangle
 
 
-class PongCourt(pygame.sprite.Sprite):
-    edges = [
-        [
-            pygame.Vector2(1, 0),
-            lambda y: pygame.Vector2(-BALL_RADIUS, y * SCREEN_HEIGHT),
-        ],
-        [
-            pygame.Vector2(-1, 0),
-            lambda y: pygame.Vector2(
-                SCREEN_WIDTH + BALL_RADIUS, y * SCREEN_HEIGHT
-            ),
-        ],
-        [
-            pygame.Vector2(0, 1),
-            lambda x: pygame.Vector2(x * SCREEN_WIDTH, -BALL_RADIUS),
-        ],
-        [
-            pygame.Vector2(0, -1),
-            lambda x: pygame.Vector2(
-                x * SCREEN_WIDTH, SCREEN_HEIGHT + BALL_RADIUS
-            ),
-        ],
-    ]
+class PongCourt(Rectangle):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.width = SCREEN_WIDTH
+        self.height = SCREEN_HEIGHT
 
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self, self.containers)
-        self.spawn_timer = 0.0
+    def court_size(self):
+        top = self.position.y
+        left = self.position.x
+        width = self.width
+        height = self.height
+        return [top, left, width, height]
 
-    # def spawn(self, radius, position, velocity):
-    #     asteroid = Asteroid(position.x, position.y, radius)
-    #     asteroid.velocity = velocity
+    def draw(self, screen):
+        pygame.draw.rect(screen, "white", self.court_size(), width=2)
 
-    # def update(self, dt):
-    #     self.spawn_timer += dt
-    #     if self.spawn_timer > ASTEROID_SPAWN_RATE:
-    #         self.spawn_timer = 0
-
-    #         # spawn a new asteroid at a random edge
-    #         edge = random.choice(self.edges)
-    #         speed = random.randint(40, 100)
-    #         velocity = edge[0] * speed
-    #         velocity = velocity.rotate(random.randint(-30, 30))
-    #         position = edge[1](random.uniform(0, 1))
-    #         kind = random.randint(1, ASTEROID_KINDS)
-    #         self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity)
+    def update(self, dt):
+        self.position += self.velocity * dt

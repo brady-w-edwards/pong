@@ -1,6 +1,7 @@
 import pygame
 
-# Base class used for all game sprites
+# BASE CLASS FOR RECTANGULAR GAME OBJECTS
+
 class Rectangle(pygame.sprite.Sprite):
     def __init__(self, x, y):
         if hasattr(self, "containers"):

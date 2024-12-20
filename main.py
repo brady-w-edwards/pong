@@ -1,13 +1,15 @@
+import sys
 import pygame
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH, BALL_RADIUS
 from left_player import PlayerLeft
 from right_player import PlayerRight
 from net import Net
 from ball import Ball
+from court import PongCourt
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     clock = pygame.time.Clock()
     dt = 0
 
@@ -17,14 +19,19 @@ def main():
     ball = pygame.sprite.Group()
     court = pygame.sprite.Group()
 
+    # ASSIGN CONTAINERS
     PlayerLeft.containers = (updatable, drawable)
     PlayerRight.containers = (updatable,drawable)
     Net.containers = (updatable, drawable)
-    Ball.containers = (ball, updatable, drawable)
+    Ball.containers = (court, updatable, drawable)
+    PongCourt.containers = (updatable)
 
-    player1 = PlayerLeft(SCREEN_WIDTH/16, SCREEN_HEIGHT/2)
-    player2 = PlayerRight(SCREEN_WIDTH - SCREEN_WIDTH/16, SCREEN_HEIGHT - SCREEN_HEIGHT/2)
+    # CREATE GAME OBJECTS
+    player1 = PlayerLeft(SCREEN_WIDTH/16, 150)
+    player2 = PlayerRight(SCREEN_WIDTH - SCREEN_WIDTH/16, 150)
+    game_ball = Ball(SCREEN_WIDTH/2, 150, BALL_RADIUS)
     net = Net(SCREEN_WIDTH/2, 0)
+    game_court = PongCourt(-SCREEN_WIDTH, SCREEN_HEIGHT)
 
     # GAME LOOP
     while True:
@@ -34,6 +41,14 @@ def main():
 
         for obj in updatable:
             obj.update(dt)
+
+        for ball in court:
+            if ball.collision(player1):
+                ball.rebound()
+            if ball.collision(player2):
+                ball.rebound()
+            if ball.collision(game_court):
+                ball.rebound()
 
         screen.fill("black")
 

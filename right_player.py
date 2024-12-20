@@ -6,12 +6,14 @@ from constants import PLAYER_RAQUET_HEIGHT, PLAYER_RAQUET_WIDTH, PLAYER_SPEED
 class PlayerRight(Rectangle):
     def __init__(self, x, y):
         super().__init__(x, y)
+        self.width = PLAYER_RAQUET_WIDTH
+        self.height = PLAYER_RAQUET_HEIGHT
         
     def rectangle(self):
         top = self.position.y + PLAYER_RAQUET_HEIGHT/2
         left = self.position.x - PLAYER_RAQUET_WIDTH/2
-        width = PLAYER_RAQUET_WIDTH
-        height = PLAYER_RAQUET_HEIGHT
+        width = self.width
+        height = self.height
         return [left, top, width, height]
 
     def draw(self, screen):
