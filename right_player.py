@@ -10,7 +10,7 @@ class PlayerRight(Rectangle):
         self.height = PLAYER_RAQUET_HEIGHT
         
     def rectangle(self):
-        top = self.position.y + PLAYER_RAQUET_HEIGHT/2
+        top = self.position.y - PLAYER_RAQUET_HEIGHT/2
         left = self.position.x - PLAYER_RAQUET_WIDTH/2
         width = self.width
         height = self.height

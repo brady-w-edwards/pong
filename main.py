@@ -1,6 +1,6 @@
 import sys
 import pygame
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH, BALL_RADIUS
+from constants import *
 from left_player import PlayerLeft
 from right_player import PlayerRight
 from net import Net
@@ -16,7 +16,6 @@ def main():
     # CREATE GROUPS
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
-    ball = pygame.sprite.Group()
     court = pygame.sprite.Group()
 
     # ASSIGN CONTAINERS
@@ -27,11 +26,11 @@ def main():
     PongCourt.containers = (updatable)
 
     # CREATE GAME OBJECTS
-    player1 = PlayerLeft(SCREEN_WIDTH/16, 150)
-    player2 = PlayerRight(SCREEN_WIDTH - SCREEN_WIDTH/16, 150)
-    game_ball = Ball(SCREEN_WIDTH/2, 150, BALL_RADIUS)
+    player1 = PlayerLeft(PLAYER_START_POSITION_X, PLAYER_START_POSITION_Y)
+    player2 = PlayerRight(SCREEN_WIDTH - PLAYER_START_POSITION_X, PLAYER_START_POSITION_Y)
+    game_ball = Ball(SCREEN_WIDTH/2, PLAYER_START_POSITION_Y, BALL_RADIUS)
     net = Net(SCREEN_WIDTH/2, 0)
-    game_court = PongCourt(-SCREEN_WIDTH, SCREEN_HEIGHT)
+    game_court = PongCourt(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     # GAME LOOP
     while True:
