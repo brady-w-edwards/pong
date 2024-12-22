@@ -23,6 +23,23 @@ class PlayerRight(Rectangle):
         forward = pygame.Vector2(0, 1)
         self.position += forward * PLAYER_SPEED * dt
 
+    def hit_edge(self, court):
+        player_rect = pygame.Rect(
+            self.position.x - self.width/2,
+            self.position.y - self.height/2,
+            self.width,
+            self.height
+        )
+        court_rect = pygame.Rect(
+            court.position.x - court.width/2,
+            court.position.y - court.height/2,
+            court.width,
+            court.height
+        )
+        if player_rect.colliderect(court_rect):
+            return True
+        else: return False
+        
     def update(self, dt):
         key = pygame.key.get_pressed()
 

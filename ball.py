@@ -1,7 +1,7 @@
 import random
 import pygame
 from circle import CircleShape
-from constants import BALL_SPEED, PLAYER_RAQUET_HEIGHT
+from constants import BALL_SPEED, PLAYER_RAQUET_HEIGHT, SCREEN_WIDTH
 
 class Ball(CircleShape):
     def __init__(self, x, y, radius):
@@ -30,6 +30,25 @@ class Ball(CircleShape):
             return True
         else: return False
 
+    def edge_collision(self, court):
+        # Create a temporary Rect object representing the circle's boundary
+        circle_rect = pygame.Rect(
+            self.position.x - self.radius,
+            self.position.y - self.radius, 
+            2 * self.radius, 
+            2 * self.radius
+        )
+        # Create a temporary Rect object representing the court boundary
+        court_rect = pygame.Rect(
+            court.position.x - court.width/2,
+            court.position.y - court.height/2,
+            court.width,
+            court.height
+        )
+        if circle_rect.colliderect(court_rect):
+            return False
+        else: return True
+
     def paddle_rebound(self, paddle):
         self.velocity.x *= -1  # Reverse direction
         # Add speed boost
@@ -38,6 +57,11 @@ class Ball(CircleShape):
         # Adjust angle based on collision point
         offset = self.velocity.y - (paddle.position.y + PLAYER_RAQUET_HEIGHT / 2)
         self.velocity.y += offset * 0.1
+
+    def edge_rebound(self, court):
+        self.velocity.y *= -1
+        offset = self.velocity.x - (court.position.y + SCREEN_WIDTH / 2)
+        self.velocity.x += offset * 0.01
 
     def update(self, dt):
         self.position += self.velocity * dt

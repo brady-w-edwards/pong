@@ -17,10 +17,11 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     court = pygame.sprite.Group()
+    players = pygame.sprite.Group()
 
     # ASSIGN CONTAINERS
-    PlayerLeft.containers = (updatable, drawable)
-    PlayerRight.containers = (updatable,drawable)
+    PlayerLeft.containers = (players, updatable, drawable)
+    PlayerRight.containers = (players, updatable,drawable)
     Net.containers = (updatable, drawable)
     Ball.containers = (court, updatable, drawable)
     PongCourt.containers = (updatable)
@@ -30,7 +31,7 @@ def main():
     player2 = PlayerRight(SCREEN_WIDTH - PLAYER_START_POSITION_X, PLAYER_START_POSITION_Y)
     game_ball = Ball(SCREEN_WIDTH/2, PLAYER_START_POSITION_Y, BALL_RADIUS)
     net = Net(SCREEN_WIDTH/2, 0)
-    game_court = PongCourt(SCREEN_WIDTH, SCREEN_HEIGHT)
+    game_court = PongCourt(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
     # GAME LOOP
     while True:
@@ -41,13 +42,17 @@ def main():
         for obj in updatable:
             obj.update(dt)
 
+        for player in players:
+            if player.hit_edge(game_court):
+                player.update(0)
+
         for ball in court:
             if ball.collision(player1.rectangle()):
                 ball.paddle_rebound(player1)
             if ball.collision(player2.rectangle()):
                 ball.paddle_rebound(player2)
-            # if ball.collision(game_court):
-            #     ball.rebound()
+            if ball.edge_collision(game_court):
+                ball.edge_rebound(game_court)
 
         screen.fill("black")
 
