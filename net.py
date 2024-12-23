@@ -1,6 +1,6 @@
 import pygame
 from rectangle import *
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH, NET_HEIGHT, NET_WIDTH
+from constants import NET_HEIGHT, NET_WIDTH
 
 
 class Net(Rectangle):

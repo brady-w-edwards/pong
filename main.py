@@ -13,6 +13,7 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
     font = pygame.font.Font(None, 24)
+    pygame.display.set_caption("PONG")
 
     # CREATE GROUPS
     updatable = pygame.sprite.Group()
@@ -38,18 +39,19 @@ def main():
     START_SCREEN = "start"
     PLAYING = "playing"
     game_state = START_SCREEN
+    running = True
 
     # START SCREEN
     def draw_start_screen():
         screen.fill("black")
-        title = f"WELCOME, Press Enter to Begin"
+        title = "WELCOME, Press Enter to Begin"
         text = font.render(title, True, "white")
         text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         screen.blit(text, text_rect)
         pygame.display.flip()
 
     # GAME LOOP
-    while True:
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -61,19 +63,20 @@ def main():
         if game_state == START_SCREEN:
             draw_start_screen()
         else:
+            player1_text = font.render(f"Player 1: {player1.score}", True, "white")
+            player2_text = font.render(f"Player 2: {player2.score}", True, "white")
+            screen.blit(player1_text, (20,20))
+            screen.blit(player2_text, (SCREEN_WIDTH/2, 20))
+
             for obj in updatable:
                 obj.update(dt)
-
-            for player in players:
-                if player.hit_edge(game_court):
-                    player.update(0)
 
             for ball in court:
                 if ball.collision(player1):
                     ball.paddle_rebound(player1)
                 if ball.collision(player2):
                     ball.paddle_rebound(player2)
-                ball.edge_collision(game_court)
+                ball.edge_collision(game_court, player1, player2)
 
             screen.fill("black")
 

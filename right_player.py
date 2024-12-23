@@ -1,6 +1,6 @@
 import pygame
 from rectangle import *
-from constants import PLAYER_RAQUET_HEIGHT, PLAYER_RAQUET_WIDTH, PLAYER_SPEED
+from constants import PLAYER_RAQUET_HEIGHT, PLAYER_RAQUET_WIDTH, PLAYER_SPEED, SCREEN_HEIGHT
 
 
 class PlayerRight(Rectangle):
@@ -8,6 +8,7 @@ class PlayerRight(Rectangle):
         super().__init__(x, y)
         self.width = PLAYER_RAQUET_WIDTH
         self.height = PLAYER_RAQUET_HEIGHT
+        self.score = 0
         
     def rectangle(self):
         top = self.position.y - PLAYER_RAQUET_HEIGHT/2
@@ -21,24 +22,9 @@ class PlayerRight(Rectangle):
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1)
+        # if self.position.y >= SCREEN_HEIGHT - self.height/2 or self.position.y <= SCREEN_HEIGHT - self.height/2:
+        #     self.velocity = pygame.Vector2(0, 0)
         self.position += forward * PLAYER_SPEED * dt
-
-    def hit_edge(self, court):
-        player_rect = pygame.Rect(
-            self.position.x - self.width/2,
-            self.position.y - self.height/2,
-            self.width,
-            self.height
-        )
-        court_rect = pygame.Rect(
-            court.position.x - court.width/2,
-            court.position.y - court.height/2,
-            court.width,
-            court.height
-        )
-        if player_rect.colliderect(court_rect):
-            return True
-        else: return False
         
     def update(self, dt):
         key = pygame.key.get_pressed()
