@@ -69,12 +69,11 @@ def main():
                     player.update(0)
 
             for ball in court:
-                if ball.collision(player1.rectangle()):
+                if ball.collision(player1):
                     ball.paddle_rebound(player1)
-                if ball.collision(player2.rectangle()):
+                if ball.collision(player2):
                     ball.paddle_rebound(player2)
-                if ball.edge_collision(game_court):
-                    ball.edge_rebound(game_court)
+                ball.edge_collision(game_court)
 
             screen.fill("black")
 

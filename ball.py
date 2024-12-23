@@ -20,24 +20,22 @@ class Ball(CircleShape):
         self.rotation += self.random_angle * multiplier
 
     def collision(self, shape):
-        # Create a temporary Rect object representing the circle's boundary
         circle_rect = pygame.Rect(
             self.position.x - self.radius,
             self.position.y - self.radius, 
             2 * self.radius, 
             2 * self.radius)
-        if circle_rect.colliderect(shape):
+        shape_rect = pygame.Rect(
+            shape.position.x - shape.width/2,
+            shape.position.y - shape.height/2,
+            shape.width,
+            shape.height
+        )
+        if circle_rect.colliderect(shape_rect):
             return True
         else: return False
 
     def edge_collision(self, court):
-        # Create a temporary Rect object representing the circle's boundary
-        circle_rect = pygame.Rect(
-            self.position.x - self.radius,
-            self.position.y - self.radius, 
-            2 * self.radius, 
-            2 * self.radius
-        )
         # Create a temporary Rect object representing the court boundary
         court_rect = pygame.Rect(
             court.position.x - court.width/2,
@@ -45,9 +43,10 @@ class Ball(CircleShape):
             court.width,
             court.height
         )
-        if circle_rect.colliderect(court_rect):
-            return False
-        else: return True
+        if self.position.y - self.radius <= court_rect.top or self.position.y + self.radius >= court_rect.bottom:
+            self.velocity.y = -self.velocity.y 
+        if self.position.x - self.radius <= court_rect.left or self.position.x + self.radius >= court_rect.right:
+            self.velocity.x = -self.velocity.x
 
     def paddle_rebound(self, paddle):
         self.velocity.x *= -1  # Reverse direction
@@ -57,11 +56,6 @@ class Ball(CircleShape):
         # Adjust angle based on collision point
         offset = self.velocity.y - (paddle.position.y + PLAYER_RAQUET_HEIGHT / 2)
         self.velocity.y += offset * 0.1
-
-    def edge_rebound(self, court):
-        self.velocity.y *= -1
-        offset = self.velocity.x - (court.position.y + SCREEN_WIDTH / 2)
-        self.velocity.x += offset * 0.01
 
     def update(self, dt):
         self.position += self.velocity * dt
