@@ -18,7 +18,7 @@ class PlayerLeft(Rectangle):
         return [left, top, width, height]
 
     def draw(self, screen):
-        pygame.draw.rect(screen, "white", self.rectangle(), width=0)
+        pygame.draw.rect(screen, "red", self.rectangle(), width=0)
 
     def move(self, dt):
         self.velocity = pygame.Vector2(0, 1)
