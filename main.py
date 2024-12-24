@@ -26,7 +26,7 @@ def main():
     PlayerRight.containers = (players, updatable,drawable)
     Net.containers = (updatable, drawable)
     Ball.containers = (court, updatable, drawable)
-    PongCourt.containers = (updatable)
+    PongCourt.containers = (updatable, drawable)
 
     # CREATE GAME OBJECTS
     player1 = PlayerLeft(PLAYER_START_POSITION_X, PLAYER_START_POSITION_Y)
@@ -38,6 +38,7 @@ def main():
     # GAME STATES
     START_SCREEN = "start"
     PLAYING = "playing"
+    WINNING_SCREEN = "won"
     game_state = START_SCREEN
     running = True
 
@@ -50,6 +51,25 @@ def main():
         screen.blit(text, text_rect)
         pygame.display.flip()
 
+    # WINNER SCREEN
+    def draw_winning_screen(winning_player):
+        screen.fill("black")
+        winning_title = f"{winning_player} WINS!! Press Enter to Play Again"
+        text = font.render(winning_title, True, "white")
+        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        screen.blit(text, text_rect)
+        pygame.display.flip()
+
+    # GAME LOOP RESET
+    def game_reset(player1, player2):
+        global running 
+        running = True
+        global game_state
+        game_state = START_SCREEN
+        player1.score = 0
+        player2.score = 0
+
+
     # GAME LOOP
     while running:
         for event in pygame.event.get():
@@ -59,15 +79,20 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if game_state == START_SCREEN and event.key == pygame.K_RETURN:
                     game_state = PLAYING
+                if game_state == WINNING_SCREEN and event.key == pygame.K_RETURN:
+                    game_reset(player1, player2)
+                if game_state == WINNING_SCREEN and event.key == pygame.K_x:
+                    return pygame.QUIT
 
         if game_state == START_SCREEN:
             draw_start_screen()
+        elif game_state == WINNING_SCREEN:
+            if player1.score == 11:
+                winner = "Player 1"
+            if player2.score == 11:
+                winner = "Player 2"
+            draw_winning_screen(winner)
         else:
-            player1_text = font.render(f"Player 1: {player1.score}", True, "white")
-            player2_text = font.render(f"Player 2: {player2.score}", True, "white")
-            screen.blit(player1_text, (20,20))
-            screen.blit(player2_text, (SCREEN_WIDTH/2, 20))
-
             for obj in updatable:
                 obj.update(dt)
 
@@ -76,12 +101,20 @@ def main():
                     ball.paddle_rebound(player1)
                 if ball.collision(player2):
                     ball.paddle_rebound(player2)
-                ball.edge_collision(game_court, player1, player2)
+                ball.edge_collision()
+                ball.score_point(player2, player1)
 
             screen.fill("black")
 
             for obj in drawable:
                 obj.draw(screen)
+
+            player1_text = font.render(f"Player 1: {player1.score}", True, "red")
+            player2_text = font.render(f"Player 2: {player2.score}", True, "green")
+            screen.blit(player1_text, (20,20))
+            screen.blit(player2_text, (SCREEN_WIDTH/2 + 20, 20))
+            if player1.score == 11 or player2.score == 11:
+                game_state = WINNING_SCREEN
 
             # re-render display
             pygame.display.flip()

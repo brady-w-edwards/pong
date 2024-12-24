@@ -10,14 +10,14 @@ class PongCourt(Rectangle):
         self.height = COURT_HEIGHT
 
     def court_size(self):
-        top = self.position.y - COURT_HEIGHT/2
-        left = self.position.x - SCREEN_WIDTH/2
+        top = 0
+        left = 50
         width = self.width
         height = self.height
         return pygame.Rect(top, left, width, height)
 
     def draw(self, screen):
-        pygame.draw.rect(screen, "white", self.court_size(), width=10)
+        pygame.draw.rect(screen, "white", self.court_size(), width=2)
 
     def update(self, dt):
         self.position += self.velocity * dt

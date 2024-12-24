@@ -18,12 +18,10 @@ class PlayerRight(Rectangle):
         return [left, top, width, height]
 
     def draw(self, screen):
-        pygame.draw.rect(screen, "white", self.rectangle(), width=2)
+        pygame.draw.rect(screen, "white", self.rectangle(), width=0)
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1)
-        # if self.position.y >= SCREEN_HEIGHT - self.height/2 or self.position.y <= SCREEN_HEIGHT - self.height/2:
-        #     self.velocity = pygame.Vector2(0, 0)
         self.position += forward * PLAYER_SPEED * dt
         
     def update(self, dt):
